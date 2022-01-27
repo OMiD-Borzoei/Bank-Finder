@@ -131,10 +131,17 @@ public class City {
                 System.err.println("No Bank Found In those Coordinates");
             else if (b instanceof mainBank)
                 System.err.println("Those Coordinates Belong to a mainBank, You Can't delete a mainBank");
-            else if (b instanceof Branch) {
-                cityMainBanks.alter(((Branch) b).bankName, (Branch) b, "delete");
-                cityAllBanks.delete(b.coordinate);
-                controller.Add("delBr", (Branch) b);
+            else if (b instanceof Branch br) {
+                cityMainBanks.alter(br.bankName, br, "delete");
+                cityAllBanks.delete(br.coordinate);
+                controller.Add("delBr", br);
+                if (this.mostBrBank.name.equals(br.bankName)) {
+                    mainBank mb = (mainBank) cityMainBanks.searchEqBr(this.mostBranches);
+                    if (mb != null)
+                        this.mostBrBank = mb;
+                    else
+                        this.mostBranches--;
+                }
                 System.out.println(ANSI_BLUE + "Entered Coordinates belonged to branch \"" + b.name +
                         "\" from mainBank \"" + ((Branch) b).bankName + "\" " +
                         " which was SUCCESSFULLY deleted" + ANSI_RESET);
@@ -198,8 +205,8 @@ public class City {
         System.out.print("Enter mainBank's Name : ");
         String bankName = getA_zString();
         try {
-            if (!cityMainBanks.search(bankName).branches.print())
-                System.out.println(ANSI_YELLOW + "Omid Has No Branches" + ANSI_RESET);
+            cityMainBanks.search(bankName).branches.print();
+            //System.out.println(ANSI_YELLOW + "Omid Has No Branches" + ANSI_RESET);
         } catch (Exception e) {
             System.err.println("MainBank Not Found !");
         }
@@ -238,25 +245,20 @@ public class City {
     void undo() {
         int x;
         try {
-            System.out.print("Enter P : ");
+            System.out.print("Enter the Time you want to Travel to : ");
             x = Integer.parseInt(sc.nextLine());
             if (x < 0)
                 throw new ArithmeticException();
             int result = controller.undo(x);
             switch (result) {
                 case 2 -> System.out.println(ANSI_BLUE + "Undo Successful, You Are At time " + x + " Now !" + ANSI_RESET);
-                case 1 -> System.out.println(ANSI_YELLOW + "We Are Already At Time " + x);
-                case 0 -> System.err.println("We haven't reached Time " + x + " Yet !");
+                case 1 -> System.out.println(ANSI_YELLOW + "We Are Already At Time " + x + ANSI_RESET);
+                case 0 -> System.out.println(ANSI_YELLOW + "We haven't reached Time " + x + " Yet !" + ANSI_RESET);
             }
 
         } catch (Exception e) {
             System.err.println("You Must Enter A non-Negative Integer");
         }
-    }
-
-    void printAll() {
-        cityAllBanks.print();
-        System.out.println("done");
     }
 
     void evaluate(String command) {
@@ -270,6 +272,8 @@ public class City {
             case "nearB" -> nearestBank();
             case "nearBr" -> nearestBranch();
             case "availB" -> printAllInRadius();
+
+            //Preferential Commands :
             case "mostBrs" -> {
                 if (this.mostBrBank != null)
                     System.out.println(ANSI_BLUE + "Bank \"" + this.mostBrBank.name + "\" With " + this.mostBranches + " Branch(es)" + ANSI_RESET);
@@ -277,7 +281,13 @@ public class City {
                     System.out.println(ANSI_YELLOW + "There's No Bank With even One Branch in this City Yet !" + ANSI_RESET);
             }
             case "undo" -> undo();
-            case "listAll" -> printAll();
+
+            //My Commands :
+            case "listAll" -> cityAllBanks.print();
+            case "listMain" -> cityMainBanks.listAll();
+            case "listN" -> cityNeighborhoods.listAll();
+            case "giveTime" -> controller.st.ll.print();
+
             default -> System.out.println(ANSI_YELLOW + "Undefined Command" + ANSI_RESET);
         }
     }

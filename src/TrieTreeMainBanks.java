@@ -18,12 +18,12 @@ public class TrieTreeMainBanks {
     }
 
     void add(Bank b) {
-        TBankNode last = add(b, b.name);
+        TBankNode last = add(b.name);
         last.isEnd = true;
         last.b = b;
     }
 
-    TBankNode add(Bank b, String key) {
+    TBankNode add(String key) {
         int length = key.length();
 
         TBankNode iterator = this.root;
@@ -38,17 +38,59 @@ public class TrieTreeMainBanks {
         }
         return iterator;
     }
+
+    boolean search(Bank b) {
+        return search(b.name) != null;
+    }
+
+    Bank search(String name) {
+        int l = name.length();
+        TBankNode it = this.root;
+        for (int d = 0; d < l; d++) {
+            int i = name.charAt(d) - 'a';
+            if (it.children[i] == null)
+                return null;
+            it = it.children[i];
+        }
+        if (it.isEnd)
+            return it.b;
+        return null;
+    }
+
+    boolean delete(String name) {
+        int l = name.length();
+        TBankNode it = this.root;
+        for (int d = 0; d < l; d++) {
+            int i = name.charAt(d) - 'a';
+            if (it.children[i] == null)
+                return false;
+            it = it.children[i];
+        }
+
+        // Now I've found the name and im in the letter of it :
+        // I'ma go back this way and delete letters
+        for (int d = 0; d < l; d++) {
+            int i = name.charAt(d) - 'a';
+            it.children[i] = null;
+            it = it.children[i];
+        }
+        return true;
+
+    }
 }
-/*
-class idk {
+
+class trieTest {
     public static void main(String[] args) {
         TrieTreeMainBanks ttmb = new TrieTreeMainBanks();
         ttmb.add(new Bank(new Coordinate(0, 0), "omid"));
         ttmb.add(new Bank(new Coordinate(1, 1), "reza"));
         ttmb.add(new Bank(new Coordinate(2, 2), "z"));
-        System.out.println(ttmb.root.children[25].b.coordinate.x);
+        System.out.println(ttmb.root.children['o' - 'a'].children['m' - 'a'].children['i' - 'a'].children['d' - 'a'].b.name);
+        System.out.println(ttmb.search("omid").coordinate.y);
+        ttmb.delete("omid");
+        System.out.println(ttmb.root.children[14]);
     }
 }
-*/
+
 
 

@@ -67,14 +67,23 @@ class NeighborhoodDB {
         return DB[ins[0]][ins[1]][ins[2]].search(name);
     }
 
-    void delete(String name){
-        int[] ins=getIndexes(name);
+    void delete(String name) {
+        int[] ins = getIndexes(name);
         DB[ins[0]][ins[1]][ins[2]].delete(name);
+    }
+
+    void listAll() {
+        for (int i = 0; i < 26; i++)
+            for (int j = 0; j < 26; j++)
+                for (int k = 0; k < 26; k++)
+                    if (DB[i][j][k].size != 0)
+                        DB[i][j][k].printAll();
     }
 }
 
 class neighLinkedList {
     Node head;
+    int size;
 
     static class Node {
         Neighborhood n;
@@ -88,6 +97,8 @@ class neighLinkedList {
 
     neighLinkedList() {
         this.head = null;
+        this.size = 0;
+
     }
 
     boolean add(Neighborhood n) {
@@ -105,6 +116,7 @@ class neighLinkedList {
                 return false;
             last.next = newNode;
         }
+        this.size++;
         return true;
     }
 
@@ -125,6 +137,7 @@ class neighLinkedList {
             return false;
         if (this.head.n.name.equals(name)) {
             this.head = this.head.next;
+            this.size--;
             return true;
         }
         Node last = this.head.next;
@@ -132,6 +145,7 @@ class neighLinkedList {
         while (last.next != null) {
             if (last.n.name.equals(name)) {
                 prev.next = last.next;
+                this.size--;
                 return true;
             }
             prev = last;
@@ -140,9 +154,18 @@ class neighLinkedList {
 
         if (last.n.name.equals(name)) {
             prev.next = null;
+            this.size--;
             return true;
         }
         return false;
+    }
+
+    void printAll() {
+        Node it = this.head;
+        while (it != null) {
+            System.out.println(City.ANSI_BLUE  + it.n.name + City.ANSI_RESET);
+            it = it.next;
+        }
     }
 }
 

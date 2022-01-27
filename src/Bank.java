@@ -79,15 +79,32 @@ class MainBanksDB {
         DB[ins[0]][ins[1]][ins[2]].alter(name, br, command);
     }
 
-    Bank delete(String name){
-        int[] ins=getIndexes(name);
+    Bank delete(String name) {
+        int[] ins = getIndexes(name);
         return DB[ins[0]][ins[1]][ins[2]].delete(name);
     }
 
+    void listAll() {
+        for (int i = 0; i < 26; i++)
+            for (int j = 0; j < 26; j++)
+                for (int k = 0; k < 26; k++)
+                    if (DB[i][j][k].size != 0)
+                        DB[i][j][k].printAll();
+    }
+
+    Bank searchEqBr(int x) {
+        for (int i = 0; i < 26; i++)
+            for (int j = 0; j < 26; j++)
+                for (int k = 0; k < 26; k++)
+                    if (DB[i][j][k].size != 0)
+                        return DB[i][j][k].findEqBr(x);
+        return null;
+    }
 }
 
 class bankLinkedList {
     Node head;
+    int size;
 
     static class Node {
         mainBank b;
@@ -101,8 +118,16 @@ class bankLinkedList {
 
     bankLinkedList() {
         this.head = null;
+        this.size = 0;
     }
 
+    void printAll() {
+        Node it = this.head;
+        while (it != null) {
+            System.out.println(City.ANSI_BLUE + it.b.name + "   x: " + it.b.coordinate.x + " ,y: " + it.b.coordinate.y + City.ANSI_RESET);
+            it = it.next;
+        }
+    }
 
     boolean add(mainBank b) {
         Node newNode = new Node(b);
@@ -119,6 +144,7 @@ class bankLinkedList {
                 return false;
             last.next = newNode;
         }
+        this.size++;
         return true;
     }
 
@@ -136,14 +162,14 @@ class bankLinkedList {
 
     void alter(String name, Branch br, String command) {
         if (this.head == null)
-            return ;
+            return;
         Node last = this.head;
         while (last.next != null) {
             if (last.b.name.equals(name)) {
                 if (command.equals("delete"))
                     last.b.branches.delete(br.coordinate);
                 else if (command.equals("add"))
-                        last.b.branches.add(br);
+                    last.b.branches.add(br);
                 break;
             }
             last = last.next;
@@ -152,7 +178,7 @@ class bankLinkedList {
             if (command.equals("delete"))
                 last.b.branches.delete(br.coordinate);
             else if (command.equals("add"))
-                    last.b.branches.add(br);
+                last.b.branches.add(br);
         }
     }
 
@@ -160,8 +186,9 @@ class bankLinkedList {
         if (this.head == null)
             return null;
         if (this.head.b.name.equals(name)) {
-            Bank newB=this.head.b;
+            Bank newB = this.head.b;
             this.head = this.head.next;
+            this.size--;
             return newB;
         }
         bankLinkedList.Node last = this.head.next;
@@ -169,6 +196,7 @@ class bankLinkedList {
         while (last.next != null) {
             if (last.b.name.equals(name)) {
                 prev.next = last.next;
+                this.size--;
                 return last.b;
             }
             prev = last;
@@ -176,8 +204,16 @@ class bankLinkedList {
         }
         if (last.b.name.equals(name)) {
             prev.next = null;
+            this.size--;
             return last.b;
         }
+        return null;
+    }
+
+    Bank findEqBr(int x) {
+        for (Node it = this.head; it != null; it = it.next)
+            if (it.b.branches.size == x)
+                return it.b;
         return null;
     }
 }

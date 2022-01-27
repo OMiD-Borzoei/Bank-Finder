@@ -15,9 +15,9 @@ public class Control {
     }
 
     int undo(int x) {
-        if(st.size<x)
+        if (st.size < x)
             return 0;
-        if(st.size==x)
+        if (st.size == x)
             return 1;
         while (st.size > x) {
             god g = st.pop();
@@ -90,6 +90,21 @@ public class Control {
                     return null;
                 this.head = this.head.next;
                 return first;
+            }
+
+            void print() {
+                int i = 0;
+                if (this.head == null)
+                    System.out.println(City.ANSI_YELLOW + "U R at Time 0" + City.ANSI_RESET);
+                else {
+                    Node it = this.head;
+                    while (it != null) {
+                        System.out.print(City.ANSI_BLUE + it.g.command + " : ");
+                        System.out.println(it.g.name == null ? it.g.br.name + " to " + it.g.br.bankName : it.g.name+City.ANSI_RESET);
+                        it=it.next;
+                    }
+                }
+
             }
         }
 

@@ -2,7 +2,7 @@ public class KDTree {
     final static int k = 2;
     static Node best;
     static double bestDist;
-    static int found;
+    static int found, pCtr;
     int size = 0;
     Node root;
 
@@ -266,8 +266,11 @@ public class KDTree {
     }
 
     boolean print() {
-        if (this.root == null)
+        pCtr = 0;
+        if (this.root == null) {
+            System.out.println(City.ANSI_YELLOW + "Nothing Found !" + City.ANSI_RESET);
             return false;
+        }
         print(this.root);
         return true;
     }
@@ -275,23 +278,9 @@ public class KDTree {
     private void print(Node root) {
         if (root == null)
             return;
-        System.out.println(City.ANSI_BLUE + root.bank.name + "  x: " + root.bank.coordinate.getX() + " ,y: " + root.bank.coordinate.getY() + City.ANSI_RESET);
+        System.out.println(City.ANSI_BLUE + ++pCtr + ". " + root.bank.name + "  x: " + root.bank.coordinate.getX() + " ,y: " + root.bank.coordinate.getY() + City.ANSI_RESET);
         print(root.left);
         print(root.right);
     }
 }
 
-/*
-    boolean search(String name) {
-        return recSearch(this.root, name);
-    }
-
-    boolean recSearch(Node root, String name) {
-        if (root == null)
-            return false;
-        if (root.bank.name.equals(name))
-            return true;
-        recSearch(root.left, name);
-        recSearch(root.right, name);
-        return false;
-    }*/

@@ -7,7 +7,6 @@ public class City {
     public static final String ANSI_RESET = "\u001B[0m";
 
     static KDTree cityAllBanks;
-    //static NeighborhoodDB cityNeighborhoods;
     static TrieTreeNeighbor cityNeighborhoods;
     static MainBanksDB cityMainBanks;
     int mostBranches;
@@ -17,7 +16,6 @@ public class City {
 
     City() {
         cityAllBanks = new KDTree();
-        //cityNeighborhoods = new NeighborhoodDB();
         cityNeighborhoods = new TrieTreeNeighbor();
         cityMainBanks = new MainBanksDB();
         this.controller = new Control();
@@ -287,7 +285,6 @@ public class City {
             //My Commands :
             case "listAll" -> cityAllBanks.print();
             case "listMain" -> cityMainBanks.listAll();
-            //case "listN" -> cityNeighborhoods.listAll();
             case "giveTime" -> controller.st.ll.print();
 
             default -> System.out.println(ANSI_YELLOW + "Undefined Command" + ANSI_RESET);

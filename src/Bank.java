@@ -74,9 +74,9 @@ class MainBanksDB {
         return DB[ins[0]][ins[1]][ins[2]].search(name);
     }
 
-    void alter(String name, Branch br, String command) {
+    mainBank alter(String name, Branch br, String command) {
         int[] ins = getIndexes(name);
-        DB[ins[0]][ins[1]][ins[2]].alter(name, br, command);
+        return DB[ins[0]][ins[1]][ins[2]].alter(name, br, command);
     }
 
     Bank delete(String name) {
@@ -92,12 +92,15 @@ class MainBanksDB {
                         DB[i][j][k].printAll();
     }
 
-    Bank searchEqBr(int x) {
+    mainBank searchEqBr(int x) {
         for (int i = 0; i < 26; i++)
             for (int j = 0; j < 26; j++)
                 for (int k = 0; k < 26; k++)
-                    if (DB[i][j][k].size != 0)
-                        return DB[i][j][k].findEqBr(x);
+                    if (DB[i][j][k].size != 0) {
+                        Bank mb = DB[i][j][k].findEqBr(x);
+                        if (mb != null)
+                            return (mainBank) mb;
+                    }
         return null;
     }
 }
@@ -160,9 +163,9 @@ class bankLinkedList {
         return last.b.name.equals(name) ? last.b : null;
     }
 
-    void alter(String name, Branch br, String command) {
+    mainBank alter(String name, Branch br, String command) {
         if (this.head == null)
-            return;
+            return null;
         Node last = this.head;
         while (last.next != null) {
             if (last.b.name.equals(name)) {
@@ -170,7 +173,7 @@ class bankLinkedList {
                     last.b.branches.delete(br.coordinate);
                 else if (command.equals("add"))
                     last.b.branches.add(br);
-                break;
+                return last.b;
             }
             last = last.next;
         }
@@ -179,7 +182,9 @@ class bankLinkedList {
                 last.b.branches.delete(br.coordinate);
             else if (command.equals("add"))
                 last.b.branches.add(br);
+            return last.b;
         }
+        return null;
     }
 
     Bank delete(String name) {

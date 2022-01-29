@@ -104,12 +104,12 @@ public class City {
                     System.err.println("These Coordinates belong to another Bank !");
                 } else {
                     Branch br = new Branch(c, bankName, name);
-                    cityMainBanks.alter(bankName, br, "add"); //adding this branch to its mainBank
+                    mainBank mainB = cityMainBanks.alter(bankName, br, "add"); //adding this branch to its mainBank
                     cityAllBanks.add(br); //adding it to the whole KDTree
                     controller.Add("addBr", br);
-                    mainBank mainB = cityMainBanks.search(br.bankName);
+                    // = cityMainBanks.search(br.bankName);
                     if (mainB.branches.size > this.mostBranches) {
-                        this.mostBranches = mainB.branches.size;
+                        this.mostBranches++;
                         this.mostBrBank = mainB;
                     }
                     System.out.println(ANSI_BLUE + "Branch \"" + name + "\" successfully added to Bank \"" + bankName + "\" !" + ANSI_RESET);
@@ -136,7 +136,7 @@ public class City {
                 cityAllBanks.delete(br.coordinate);
                 controller.Add("delBr", br);
                 if (this.mostBrBank.name.equals(br.bankName)) {
-                    mainBank mb = (mainBank) cityMainBanks.searchEqBr(this.mostBranches);
+                    mainBank mb = cityMainBanks.searchEqBr(this.mostBranches);
                     if (mb != null)
                         this.mostBrBank = mb;
                     else

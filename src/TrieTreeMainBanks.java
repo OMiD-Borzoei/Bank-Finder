@@ -91,6 +91,44 @@ class trieTest {
         System.out.println(ttmb.root.children[14]);
     }
 }
+/*
+*  static TrieNode remove(TrieNode root, String key, int depth)
+    {
+        // If tree is empty
+        if (root == null)
+            return null;
+
+        // If last character of key is being processed
+        if (depth == key.length()) {
+
+            // This node is no more end of word after
+            // removal of given key
+            if (root.isEndOfWord)
+                root.isEndOfWord = false;
+
+            // If given is not prefix of any other word
+            if (isEmpty(root)) {
+                root = null;
+            }
+
+            return root;
+        }
+
+        // If not last character, recur for the child
+        // obtained using ASCII value
+        int index = key.charAt(depth) - 'a';
+        root.children[index] =
+            remove(root.children[index], key, depth + 1);
+
+        // If root does not have any child (its only child got
+        // deleted), and it is not end of another word.
+        if (isEmpty(root) && root.isEndOfWord == false){
+            root = null;
+        }
+
+        return root;
+    }
+    * */
 
 
 

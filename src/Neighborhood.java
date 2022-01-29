@@ -23,6 +23,7 @@ public class Neighborhood {
     }
 }
 
+
 class NeighborhoodDB {
     neighLinkedList[][][] DB;
 
